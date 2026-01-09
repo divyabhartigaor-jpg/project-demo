@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic UI — TASK</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <style>
+        :root{
+            --accent: #7c4dff;
+            --bg-start: #0f172a;
+            --bg-end: #0b1020;
+            --glass: rgba(255,255,255,0.06);
+            --card-bg: rgba(255,255,255,0.02);
+            --text: #e6eef8;
+            --gradient-1: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            --gradient-2: linear-gradient(135deg,#ff7e5f 0%,#feb47b 100%);
+            --gradient-3: linear-gradient(135deg,#00c6ff 0%,#0072ff 100%);
+        }
+
+        /* Animated background */
+        body{
+            margin:0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color:var(--text);
+            background: radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.02), transparent 10%), radial-gradient(ellipse at 90% 90%, rgba(255,255,255,0.02), transparent 10%), var(--bg-start);
+            background-size: 200% 200%, 200% 200%, 100% 100%;
+            animation: bgShift 12s linear infinite;
+            min-height:100vh;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        @keyframes bgShift{
+            0%{background-position:0% 0%,100% 100%,0% 0%}
+            50%{background-position:100% 0%,0% 100%,0% 0%}
+            100%{background-position:0% 0%,100% 100%,0% 0%}
+        }
+
+        /* Top control panel */
+        .control-panel{
+            position:fixed;
+            top:16px;
+            right:16px;
+            z-index:1050;
+            display:flex;
+            gap:10px;
+            align-items:center;
+            backdrop-filter: blur(8px) saturate(120%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+            padding:10px 12px;
+            border-radius:12px;
+            box-shadow: 0 6px 24px rgba(2,6,23,0.5);
+        }
+
+        .preset{
+            width:34px;height:34px;border-radius:8px;border:2px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform .18s ease, box-shadow .18s ease;
+        }
+        .preset:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+
+        .theme-label{font-size:12px;color:var(--text);margin-right:6px}
+
+        /* Futuristic navbar */
+        .navbar{
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-bottom:1px solid rgba(255,255,255,0.03);
+            backdrop-filter: blur(6px);
+            box-shadow:0 6px 30px rgba(2,6,23,0.45);
+            padding:0.7rem 1rem;
+        }
+
+        .navbar-brand{font-weight:700;letter-spacing:1px;color:var(--text)}
+
+        .glow-btn{border-radius:10px;padding:.45rem .8rem;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);transition:all .25s ease}
+        .glow-btn:hover{box-shadow:0 8px 30px rgba(124,77,255,0.18);transform:translateY(-3px)}
+
+        /* Image animations */
+        .hero-row img{width:100%;max-height:260px;object-fit:cover;border-radius:12px;box-shadow:0 10px 40px rgba(2,6,23,0.6);transform:translateY(10px);opacity:0;transition:all .7s cubic-bezier(.2,.9,.3,1)}
+        .in-view{transform:none;opacity:1}
+
+        /* Form styles */
+        form{max-width:920px;margin:40px auto;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 20px 60px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+
+        .form-control:focus{outline:none;box-shadow:0 8px 30px rgba(124,77,255,0.12);border-color:rgba(124,77,255,0.6)}
+
+        .btn-cta{background:var(--gradient-1);border:none;color:white;font-weight:700;border-radius:10px;padding:.6rem 1.1rem;transition:transform .18s ease, box-shadow .18s ease}
+        .btn-cta:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(102,126,234,0.18)}
+
+        /* subtle floating animation for cards */
+        .float-up{animation:floaty 6s ease-in-out infinite}
+        @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+
+        /* responsive tweaks */
+        @media (max-width:768px){
+            .control-panel{right:10px;top:10px;padding:8px}
+            .hero-row img{max-height:180px}
+            form{margin:20px}
+        }
+
+        /* Day/Night theme toggles */
+        body[data-theme='day']{--bg-start:#f6f8ff;--bg-end:#eef3ff;--text:#0b1020;--card-bg:rgba(2,6,23,0.03)}
+        body[data-theme='day'] .btn-cta{color:#fff}
+
+    </style>
+</head>
+<body data-theme="night">
+    <!-- Control Panel: Gradient presets + Day/Night slider -->
+    <div class="control-panel">
+        <span class="theme-label">Theme</span>
+        <input id="dayNight" type="range" min="0" max="1" step="1" value="0" title="Day / Night toggle" aria-label="Day Night toggle" />
+        <div style="width:8px"></div>
+        <span class="theme-label">Presets</span>
+        <div class="preset" data-preset="1" title="Purple" style="background:linear-gradient(135deg,#667eea,#764ba2)"></div>
+        <div class="preset" data-preset="2" title="Sunset" style="background:linear-gradient(135deg,#ff7e5f,#feb47b)"></div>
+        <div class="preset" data-preset="3" title="Ocean" style="background:linear-gradient(135deg,#00c6ff,#0072ff)"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">FUTURE UI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+          </ul>
+          <div class="d-flex">
+            <button class="glow-btn me-2">Docs</button>
+            <button class="btn-cta">Get Started</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero images -->
+     <div class="container my-4 hero-row">
+      <div class="row g-3">
+        <div class="col-md-6 float-up">
+          <img src="S2.jpeg" alt="S2" class="img-fluid in-view-target rounded">
+        </div>
+        <div class="col-md-6 float-up">
+          <img src="S1.jpeg" alt="S1" class="img-fluid in-view-target rounded">
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMS -->
+    <form class="row g-3">
+      <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Email</label>
+        <input type="email" class="form-control" id="inputEmail4" placeholder="you@domain.com">
+      </div>
+      <div class="col-md-6">
+        <label for="inputPassword4" class="form-label">Password</label>
+        <input type="password" class="form-control" id="inputPassword4" placeholder="••••••">
+      </div>
+      <div class="col-12">
+        <label for="inputAddress" class="form-label">Address</label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+      </div>
+      <div class="col-md-6">
+        <label for="inputCity" class="form-label">City</label>
+        <input type="text" class="form-control" id="inputCity">
+      </div>
+      <div class="col-md-4">
+        <label for="inputState" class="form-label">State</label>
+        <select id="inputState" class="form-select">
+          <option selected>Choose...</option>
+          <option>...</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="inputZip" class="form-label">Zip</label>
+        <input type="text" class="form-control" id="inputZip">
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gridCheck">
+          <label class="form-check-label" for="gridCheck">Subscribe</label>
+        </div>
+      </div>
+      <div class="col-12 d-flex justify-content-end">
+        <button type="submit" class="btn btn-cta">Sign in</button>
+      </div>
+    </form>
+
+    <script>
+      // Gradient presets and day/night toggle
+      const presets = {
+        1: getComputedStyle(document.documentElement).getPropertyValue('--gradient-1').trim(),
+        2: getComputedStyle(document.documentElement).getPropertyValue('--gradient-2').trim(),
+        3: getComputedStyle(document.documentElement).getPropertyValue('--gradient-3').trim(),
+      };
+
+      document.querySelectorAll('.preset').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          const p = el.dataset.preset;
+          document.documentElement.style.setProperty('--bg-start', 'transparent');
+          // apply big animated overlay gradient using pseudo element via CSS variable
+          document.body.style.backgroundImage = presets[p] + ', radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.02), transparent 10%), radial-gradient(ellipse at 90% 90%, rgba(255,255,255,0.02), transparent 10%)';
+        });
+      });
+
+      // Day/Night slider
+      const slider = document.getElementById('dayNight');
+      slider.addEventListener('input', (e)=>{
+        const val = e.target.value;
+        if(val==='1'){
+          document.body.setAttribute('data-theme','day');
+          document.body.style.backgroundImage = 'none';
+          document.documentElement.style.setProperty('--bg-start','#f6f8ff');
+          document.documentElement.style.setProperty('--bg-end','#eef3ff');
+        } else {
+          document.body.setAttribute('data-theme','night');
+          document.documentElement.style.setProperty('--bg-start','#0f172a');
+          document.documentElement.style.setProperty('--bg-end','#0b1020');
+          // restore animated background
+          document.body.style.backgroundImage = '';
+        }
+      });
+
+      // Intersection observer to animate images into view
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(ent=>{
+          if(ent.isIntersecting) ent.target.classList.add('in-view');
+        });
+      },{threshold:0.2});
+
+      document.querySelectorAll('.in-view-target').forEach(el=>obs.observe(el));
+
+      // Small micro-animations for inputs
+      document.querySelectorAll('.form-control').forEach(input=>{
+        input.addEventListener('focus', ()=> input.classList.add('focus'));
+        input.addEventListener('blur', ()=> input.classList.remove('focus'));
+      });
+    </script>
+
+    <!-- Footer -->
+    <style>
+      .site-footer{background:linear-gradient(180deg, rgba(0,10,30,0.6), rgba(0,0,0,0.6));color:var(--text);padding:36px 18px;border-top:1px solid rgba(255,255,255,0.03);}
+      .site-footer .footer-inner{max-width:1100px;margin:0 auto;display:flex;gap:24px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+      .footer-col{flex:1 1 220px;min-width:180px}
+      .footer-logo{font-weight:800;letter-spacing:1px;font-size:18px;margin-bottom:12px}
+      .footer-links{list-style:none;padding:0;margin:0}
+      .footer-links li{margin:8px 0}
+      .footer-links a{color:rgba(230,238,248,0.9);text-decoration:none;transition:color .18s ease}
+      .footer-links a:hover{color:var(--accent)}
+      .socials{display:flex;gap:10px;margin-top:10px}
+      .socials a{width:36px;height:36px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);transition:transform .18s ease, box-shadow .18s ease}
+      .socials a:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+      .thumbs{display:flex;gap:8px;margin-top:12px}
+      .thumbs img{width:68px;height:48px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid rgba(255,255,255,0.03);transition:transform .18s ease, box-shadow .18s ease}
+      .thumbs img:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,0.6)}
+      .back-top{position:fixed;right:18px;bottom:18px;width:52px;height:52px;border-radius:14px;background:var(--gradient-1);display:inline-flex;align-items:center;justify-content:center;color:white;cursor:pointer;box-shadow:0 12px 40px rgba(102,126,234,0.15);z-index:2000;opacity:0;transform:translateY(18px);transition:all .28s ease}
+      .back-top.show{opacity:1;transform:none}
+      .footer-bottom{margin-top:20px;text-align:center;color:rgba(230,238,248,0.6);font-size:13px}
+
+      /* Lightbox overlay */
+      .lightbox{position:fixed;inset:0;background:rgba(2,6,23,0.86);display:flex;align-items:center;justify-content:center;z-index:3000;opacity:0;pointer-events:none;transition:opacity .24s ease}
+      .lightbox.show{opacity:1;pointer-events:auto}
+      .lightbox img{max-width:92%;max-height:82%;border-radius:12px;box-shadow:0 20px 80px rgba(0,0,0,0.8)}
+
+      @media (max-width:720px){.site-footer .footer-inner{padding:0 8px}.thumbs img{width:56px;height:40px}}
+    </style>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-col">
+          <div class="footer-logo">FUTURE UI</div>
+          <div style="max-width:320px;color:rgba(230,238,248,0.75)">A sleek, animated UI demo — toggle themes and explore interactions. Powered by simple HTML/CSS/JS.</div>
+          <div class="socials">
+            <a href="#" aria-label="Twitter" title="Twitter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 5.92c-.63.28-1.3.47-2 .56.72-.43 1.27-1.1 1.53-1.9-.68.4-1.44.7-2.25.86A3.55 3.55 0 0 0 12.9 8.2c0 .28.03.55.1.81-2.96-.15-5.59-1.57-7.35-3.73-.31.54-.5 1.17-.5 1.84 0 1.27.65 2.4 1.64 3.06-.6-.02-1.16-.18-1.65-.45v.04c0 1.78 1.26 3.27 2.93 3.61-.3.08-.62.12-.95.12-.23 0-.46-.02-.68-.06.47 1.46 1.83 2.52 3.45 2.55A7.12 7.12 0 0 1 4 19.53 10.06 10.06 0 0 0 9.3 21c6.35 0 9.83-5.27 9.83-9.85v-.45c.68-.48 1.26-1.08 1.72-1.77-.63.28-1.3.48-2 .56z" fill="currentColor"/></svg>
+            </a>
+            <a href="#" aria-label="GitHub" title="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 .5C5.7.5.9 5.3.9 11.6c0 4.7 3 8.6 7.2 10-.06-.84-.12-2.15.03-3.08.13-.86.87-5.48.87-5.48s-.22-.44-.22-1.1c0-1 0-1.8 1.33-1.8 1.26 0 1.82.95 1.82 2.08 0 1.27-.81 3.18-1.23 4.95-.35 1.5.74 2.72 2.2 2.72 2.64 0 4.68-3.12 4.68-7.62 0-3.98-2.86-6.8-6.94-6.8-4.45 0-7.1 3.36-7.1 6.8 0 1.35.52 2.8 1.18 3.6.13.15.15.28.11.43-.12.48-.38 1.53-.43 1.74-.07.32-.23.4-.43.3-1.52-.7-2.47-2.8-2.47-4.5 0-3.67 2.68-7.06 7.72-7.06 4.15 0 7.4 2.98 7.4 6.96 0 4.08-2.3 7.36-5.48 7.36-1.07 0-2.08-.57-2.42-1.22 0 0-.57 2.13-.7 2.66-.25.9-.93 1.96-1.39 2.62C9.8 23.8 10.88 24 12 24c6.3 0 11-4.8 11-11.4S18.3.5 12 .5z" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 style="margin-bottom:8px">Navigate</h4>
+          <ul class="footer-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 style="margin-bottom:8px">Gallery</h4>
+          <div class="thumbs">
+            <img src="S1.jpeg" alt="thumb1" data-full="S1.jpeg">
+            <img src="S2.jpeg" alt="thumb2" data-full="S2.jpeg">
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">© <span id="year"></span> FUTURE UI • Built with ❤️</div>
+    </footer>
+
+    <div class="lightbox" id="lightbox"><img src="" alt="preview"></div>
+    <div class="back-top" id="backTop" title="Back to top">▲</div>
+     <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    SUBJECT
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">MATHS</a></li>
+    <li><a class="dropdown-item" href="#">ANALYTICAL GEOMETRY</a></li>
+    <li><a class="dropdown-item" href="#">TRIGONOMETRY</a></li>
+    <li><a class="dropdown-item" href="#">STATISTICS</a></li>
+    <li><a class="dropdown-item" href="#">PHYSICS</a></li>
+    <li><a class="dropdown-item" href="#">CHEMISTRY</a></li>
+
+  </ul>
+</div>
+
+    <script>
+      // Footer interactions: year, thumbnails, lightbox, back-to-top
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const lightbox = document.getElementById('lightbox');
+      const lbImg = lightbox.querySelector('img');
+      document.querySelectorAll('.thumbs img').forEach(img=>{
+        img.addEventListener('click', ()=>{
+          lbImg.src = img.dataset.full || img.src;
+          lightbox.classList.add('show');
+        });
+      });
+      lightbox.addEventListener('click', ()=> lightbox.classList.remove('show'));
+
+      // Back to top
+      const back = document.getElementById('backTop');
+      window.addEventListener('scroll', ()=>{
+        if(window.scrollY > 240) back.classList.add('show'); else back.classList.remove('show');
+      });
+      back.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+    </script>   
+</body>
+</html>
